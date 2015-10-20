@@ -27,9 +27,11 @@ npm install --save react-dom-stream react-dom react
 
 There are three public methods in this project: `renderToString`, `renderToStaticMarkup`, and `render`, and they are intended as nearly drop-in replacements for the corresponding methods in `react-dom`. 
 
-### `renderToString(reactElement, stream, options) : Promise(hash)`
+### Rendering on the server
 
-To use this method, you need to require `react-dom-stream/server`.
+To use either of the server-side methods, you need to require `react-dom-stream/server`.
+
+#### `renderToString(reactElement, stream, options) : Promise(hash)`
 
 This method renders `reactElement` to `stream`. The Promise that it returns resolves when the method is done writing to the stream, and the Promise resolves to a hash that must be passed to `react-dom-stream`'s `render` on the client side (see below.)
 
@@ -59,13 +61,18 @@ app.get('/', async function (req, res) {
 });
 ```
 
-`options` is currently ignored, but I have plans to add it soon.
+`options` is an optional object with tunable options for rendering. Right now, it only supports `bufferSize`, which is a number of bytes to buffer before writing to the stream. It defaults to 10,000, although I reserve the right to change the default as we learn more about the performance of this library.
 
-### `renderToStaticMarkup(reactElement, stream, options): Promise()`
+```javascript
+// override the buffer to be just 1000 bytes.
+var hash = await ReactDOMStream.renderToString(<Foo prop={value}/>, res, {bufferSize: 1000});
+```
 
-To use this method, you need to require `react-dom-stream/server`.
+You may ask yourself: why go to the trouble of including a buffer, when the whole point of this project is to stream? Well, a naive implementation of React server streaming involves a lot of very small writes: every open tag, close tag, and tag content becomes a separate write. Preliminary performance tests indicate that streaming lots of small (<100B) writes to the output buffer can create enough overhead to overwhelm any performance gains from streaming. This is especially true when looking at TTLB. Coalescing writes into a limited, several kilobyte buffer adds a very small amount to TTFB, but in exchange TTLB comes way, way down.
 
-This method renders `reactElement` to `stream`. Like `ReactDOM.renderToStaticMarkup`, it is only good for static pages where you don't intend to use React to render on the client side, and it generates smaller sized markup than `reactToStringStream`. The Promise that it returns resolves when the method is done writing to the stream.
+#### `renderToStaticMarkup(reactElement, stream, options): Promise()`
+
+This method renders `reactElement` to `stream`. Like `ReactDOM.renderToStaticMarkup`, it is only good for static pages where you don't intend to use React to render on the client side, and in exchange it generates smaller sized markup than `renderToString`. The Promise that it returns resolves when the method is done writing to the stream.
 
 In an Express app, it is used like this:
 
@@ -91,13 +98,15 @@ app.get('/', async function (req, res) {
 });
 ```
 
-`options` is currently ignored, but I have plans to add it soon.
+`options` is an optional object, and has one member, `bufferSize`. See `renderToString` above for more info.
 
-### `render(reactElement, domElement, hash)`
+### Rendering on the client
 
-To use this method, you need to require `react-dom-stream`.
+To use the client-side method, you need to require `react-dom-stream`.
 
-If you generate server markup with this project, you cannot use the standard `ReactDOM.render`; you need to use the `render` method in `react-dom-stream`. The only difference between `react-dom`'s version and this one is that this also takes in the hash returned from `renderToString`:
+#### `render(reactElement, domElement, hash)`
+
+If you generate server markup with this project, *you cannot use the standard `ReactDOM.render`*; you *must* use the `render` method in `react-dom-stream`. The only difference between `react-dom`'s version and this one is that this `render` also takes in the hash returned from `renderToString`:
 
 ```javascript
 var ReactDOMStream = require("react-dom-stream");
@@ -105,6 +114,8 @@ var ReactDOMStream = require("react-dom-stream");
 var hash = 1234567890; // returned from renderToString's promise and read out into the page
 ReactDOMStream.render(<Foo prop={value}/>, document.getElementById("bar"), hash);
 ```
+
+All other client-side methods on `react` and `react-dom` (like `createElement` or `unmountComponentAtNode`) can be used in concert with this `render` method.
 
 ## Who?
 
@@ -120,8 +131,12 @@ This module is forked from Facebook's React project. All extra code and modifica
 
 Please feel free to file any issues at <https://github.com/aickin/react-dom-stream>. Thanks!
 
-## I want to contribute!
+## Wait, where's the code?
 
-Well, this is awkward. You may have noticed that none of the actual server-side rendering code is actually not in the `react-dom-stream` repo. Most of the interesting code is over at <https://github.com/aickin/react/tree/streaming-render-0.14>, which is a fork of React. Eventually, I hope to unify these repos, but for now, I just build the react fork repo and copy the resulting lib/ directory over to this one before publishing to npm. 
+Well, this is awkward. You may have noticed that none of the actual server-side rendering code is actually not in the `react-dom-stream` repo. Most of the interesting code is over at <https://github.com/aickin/react/tree/streaming-render-0.14>, which is a fork of React. Specifically, check out [this commit](https://github.com/aickin/react/commit/d650a52e806f110ebec971e048b1dbded53cacd6) to see most of the interesting changes from React 0.14. Eventually, I hope to unify these repos, but for now, I just build the react fork repo and copy the resulting build/packages/reactlib/ directory over to this project before publishing to npm. 
 
-However: if you'd like to send PRs to either repo, please feel free!
+## I'd like to contribute!
+
+Awesome. You are the coolest.
+
+If you'd like to send PRs to either repo, please feel free! I'll require a CLA before pulling code to keep rights clean, but we can figure that out when we get there.
