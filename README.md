@@ -15,7 +15,7 @@ This project attempts to fix the first two problems by rendering directly to a s
 
 When web servers stream out their content, browsers can render pages for users before the entire response is finished. To learn more about streaming HTML to browsers, see [HTTP Archive: adding flush](http://www.stevesouders.com/blog/2013/01/31/http-archive-adding-flush/) and [Flushing the Document Early](http://www.stevesouders.com/blog/2009/05/18/flushing-the-document-early/).
 
-My preliminary tests have found that this renderer keeps the TTFB nearly constant as the size of a page gets larger. TTLB can be slightly longer than React's methods (~3%) when testing with zero network latency, but TTLB is as much as 47% less than React when real network speeds are used. In a real world test on Heroku, for example, I found that compared to React TTFB was 65% less and TTLB was 37% less for a 108KB page.
+My preliminary tests have found that this renderer keeps the TTFB nearly constant as the size of a page gets larger. TTLB can be slightly longer than React's methods (~3%) when testing with zero network latency, but TTLB is as much as 47% less than React when real network speeds are used. In a real world test on Heroku, for example, I found that compared to React TTFB was 65% less and TTLB was 37% less for a 108KB page. To see more on performance, check out the [react-dom-stream-example](https://github.com/aickin/react-dom-stream-example) repo.
 
 ## How?
 
