@@ -1,6 +1,6 @@
 {
   "name": "react-dom-stream",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A streaming server-side rendering library for React.",
   "main": "index.js",
   "scripts": {
