@@ -6,9 +6,9 @@ This is a React renderer for generating markup on a NodeJS server, but unlike th
 
 One difficulty with `ReactDOM.renderToString` is that it is synchronous, and it can become a performance challenge in server-side rendering of React sites. This is especially true of pages with larger HTML payloads, because `ReactDOM.renderToString`'s runtime tends to scale more or less linearly with the number of virtual DOM nodes. This leads to three problems:
 
-1) The server cannot send out any part of the response until all the HTML is created, which means that browsers can't start working on painting the page until the renderToString call is done. With larger pages, this can introduce a latency of hundreds of milliseconds.
-2) The server has to allocate memory for the entire HTML string.
-3) One call to `ReactDOM.renderToString` can dominate the CPU and starve out other requests. This is particularly troublesome on servers that serve a mix of small and large pages.
+1. The server cannot send out any part of the response until all the HTML is created, which means that browsers can't start working on painting the page until the renderToString call is done. With larger pages, this can introduce a latency of hundreds of milliseconds.
+2. The server has to allocate memory for the entire HTML string.
+3. One call to `ReactDOM.renderToString` can dominate the CPU and starve out other requests. This is particularly troublesome on servers that serve a mix of small and large pages.
 
 
 This project attempts to fix the first two problems by rendering directly to a stream, and I hope to work on the third problem as the project develops.
