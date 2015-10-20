@@ -1,6 +1,6 @@
 {
   "name": "react-dom-stream",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "A streaming server-side rendering library for React.",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,9 @@
   },
   "author": "Sasha Aickin",
   "license": "Apache-2.0",
-  "repository" :
-  { 
-  	"type" : "git",
-    "url" : "https://github.com/aickin/react-dom-stream.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aickin/react-dom-stream.git"
   },
   "homepage": "https://github.com/aickin/react-dom-stream",
   "peerDependencies": {
