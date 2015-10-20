@@ -19,7 +19,13 @@ My preliminary tests have found that this renderer keeps the TTFB nearly constan
 
 ## How?
 
-There are three public methods in this project: `renderToString`, `renderToStaticMarkup`, and `render`, and they are intended as nearly drop-in replacements for the corresponding methods in `react-dom`.
+First, install `react-dom-stream` into your project:
+
+```
+npm install --save react-dom-stream react-dom react
+```
+
+There are three public methods in this project: `renderToString`, `renderToStaticMarkup`, and `render`, and they are intended as nearly drop-in replacements for the corresponding methods in `react-dom`. 
 
 ### `renderToString(reactElement, stream, options) : Promise(hash)`
 
