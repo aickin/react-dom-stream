@@ -31,9 +31,9 @@ There are three public methods in this project: `renderToString`, `renderToStati
 
 To use either of the server-side methods, you need to require `react-dom-stream/server`.
 
-#### `renderToString(reactElement, stream, options) : Promise(hash)`
+#### `Promise(Number) renderToString(ReactElement element, Stream stream, [Object options])`
 
-This method renders `reactElement` to `stream`. The Promise that it returns resolves when the method is done writing to the stream, and the Promise resolves to a hash that must be passed to `react-dom-stream`'s `render` on the client side (see below.)
+This method renders `element` to `stream`. The Promise that it returns resolves when the method is done writing to the stream, and the Promise resolves to a hash that must be passed to `react-dom-stream`'s `render` on the client side (see below.)
 
 In an Express app, it is used like this:
 
@@ -70,9 +70,9 @@ var hash = await ReactDOMStream.renderToString(<Foo prop={value}/>, res, {buffer
 
 You may ask yourself: why go to the trouble of including a buffer, when the whole point of this project is to stream? Well, a naive implementation of React server streaming involves a lot of very small writes: every open tag, close tag, and tag content becomes a separate write. Preliminary performance tests indicate that streaming lots of small (<100B) writes to the output buffer can create enough overhead to overwhelm any performance gains from streaming. This is especially true when looking at TTLB. Coalescing writes into a limited, several kilobyte buffer adds a very small amount to TTFB, but in exchange TTLB comes way, way down.
 
-#### `renderToStaticMarkup(reactElement, stream, options): Promise()`
+#### `Promise renderToStaticMarkup(ReactElement element, Stream stream, [Object options])`
 
-This method renders `reactElement` to `stream`. Like `ReactDOM.renderToStaticMarkup`, it is only good for static pages where you don't intend to use React to render on the client side, and in exchange it generates smaller sized markup than `renderToString`. The Promise that it returns resolves when the method is done writing to the stream.
+This method renders `element` to `stream`. Like `ReactDOM.renderToStaticMarkup`, it is only good for static pages where you don't intend to use React to render on the client side, and in exchange it generates smaller sized markup than `renderToString`. The Promise that it returns resolves when the method is done writing to the stream.
 
 In an Express app, it is used like this:
 
@@ -104,7 +104,7 @@ app.get('/', async function (req, res) {
 
 To use the client-side method, you need to require `react-dom-stream`.
 
-#### `render(reactElement, domElement, hash)`
+#### `ReactComponent render(ReactElement element, DOMElement container, Number hash, [function callback])`
 
 If you generate server markup with this project, *you cannot use the standard `ReactDOM.render`*; you *must* use the `render` method in `react-dom-stream`. The only difference between `react-dom`'s version and this one is that this `render` also takes in the hash returned from `renderToString`:
 
