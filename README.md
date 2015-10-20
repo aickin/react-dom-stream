@@ -1,4 +1,4 @@
-#react-dom-stream
+# react-dom-stream
 
 This is a React renderer for generating markup on a NodeJS server, but unlike the built-in `ReactDOM.renderToString`, this module renders to a stream.
 
