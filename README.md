@@ -91,7 +91,7 @@ app.get('/', async function (req, res) {
 
 To use this method, you need to require `react-dom-stream`.
 
-If you generate server markup with this project, you cannot use the standard `ReactDOM.render`; you need to use the `render` method in `react-dom-stream`. The only difference between `react-dom`'s version and this one is that this also takes in the hash returned from `reactToStringStream`:
+If you generate server markup with this project, you cannot use the standard `ReactDOM.render`; you need to use the `render` method in `react-dom-stream`. The only difference between `react-dom`'s version and this one is that this also takes in the hash returned from `renderToString`:
 
 ```javascript
 var ReactDOMStream = require("react-dom-stream");
@@ -106,6 +106,6 @@ ReactDOMStream.render(<Foo prop={value}/>, document.getElementById("bar"), hash)
 
 ## Status
 
-This project is of alpha quality; it has not been used in production yet. It does, however, pass all of the automated tests that are currently run on `react-dom/server` in the main React project.
+This project is of alpha quality; it has not been used in production yet. It does, however, pass all of the automated tests that are currently run on `react-dom` in the main React project.
 
 This module is forked from Facebook's React project. All extra code and modifications are offered under the Apache 2.0 license.
