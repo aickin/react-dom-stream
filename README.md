@@ -19,30 +19,43 @@ My preliminary tests have found that this renderer keeps the TTFB nearly constan
 
 ## How?
 
-There are three public methods in this project: `renderToStringStream`, `renderToStaticMarkupStream`, and `render`, and they are intended as nearly drop-in replacements for the corresponding methods in `react-dom`.
+There are three public methods in this project: `renderToString`, `renderToStaticMarkup`, and `render`, and they are intended as nearly drop-in replacements for the corresponding methods in `react-dom`.
 
-### `renderToStringStream(reactElement, stream, options) : Promise(hash)`
+### `renderToString(reactElement, stream, options) : Promise(hash)`
 
 To use this method, you need to require `react-dom-stream/server`.
 
-This method renders `reactElement` to `stream`. The Promise that it returns resolves when the method is done writing to the stream, and the Promise resolves to a hash that must be passed to `render` on the client side (see "How to connect to markup on client side" below.)
+This method renders `reactElement` to `stream`. The Promise that it returns resolves when the method is done writing to the stream, and the Promise resolves to a hash that must be passed to `react-dom-stream`'s `render` on the client side (see below.)
 
 In an Express app, it is used like this:
+
 ```javascript
 var ReactDOMStream = require("react-dom-stream/server");
 
 app.get('/', function (req, res) {
-	ReactDOMStream.renderToStringStream(<Foo prop={value}/>, res)
+	ReactDOMStream.renderToString(<Foo prop={value}/>, res)
 		.then(function(hash) {
 			// TODO: write the hash out to the page in a script tag
 			res.end();
 		});
-}
+});
+```
+
+Or, if you are using async/await from ES7, you can use it like this:
+
+```javascript
+import ReactDOMStream from "react-dom-stream/server";
+
+app.get('/', async function (req, res) {
+	var hash = await ReactDOMStream.renderToString(<Foo prop={value}/>, res);
+	// TODO: write the hash out to the page in a script tag
+	res.end();
+});
 ```
 
 `options` is currently ignored, but I have plans to add it soon.
 
-### `renderToStaticMarkupStream(reactElement, stream, options): Promise()`
+### `renderToStaticMarkup(reactElement, stream, options): Promise()`
 
 To use this method, you need to require `react-dom-stream/server`.
 
@@ -54,11 +67,22 @@ In an Express app, it is used like this:
 var ReactDOMStream = require("react-dom-stream/server");
 
 app.get('/', function (req, res) {
-	ReactDOMStream.renderToStaticMarkupStream(<Foo prop={value}/>, res)
+	ReactDOMStream.renderToStaticMarkup(<Foo prop={value}/>, res)
 		.then(function() {
 			res.end();
 		});
-}
+});
+```
+
+Or, if you are using async/await from ES7, you can use it like this:
+
+```javascript
+import ReactDOMStream from "react-dom-stream/server";
+
+app.get('/', async function (req, res) {
+	await ReactDOMStream.renderToStaticMarkup(<Foo prop={value}/>, res);
+	res.end();
+});
 ```
 
 `options` is currently ignored, but I have plans to add it soon.
@@ -72,7 +96,7 @@ If you generate server markup with this project, you cannot use the standard `Re
 ```javascript
 var ReactDOMStream = require("react-dom-stream");
 
-var hash = 1234567890; // returned from renderToStringStream's promise and read out into the page
+var hash = 1234567890; // returned from renderToString's promise and read out into the page
 ReactDOMStream.render(<Foo prop={value}/>, document.getElementById("bar"), hash);
 ```
 
