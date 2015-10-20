@@ -109,3 +109,13 @@ ReactDOMStream.render(<Foo prop={value}/>, document.getElementById("bar"), hash)
 This project is of alpha quality; it has not been used in production yet. It does, however, pass all of the automated tests that are currently run on `react-dom` in the main React project.
 
 This module is forked from Facebook's React project. All extra code and modifications are offered under the Apache 2.0 license.
+
+## Something's wrong!
+
+Please feel free to file any issues at https://github.com/aickin/react-dom-stream . Thanks!
+
+## I want to contribute!
+
+Well, this is awkward. You may have noticed that none of the actual server-side rendering code is actually in the `react-dom-stream` repo. Most of the interesting code is over at https://github.com/aickin/react/tree/streaming-render-0.14 , which is a fork of React. Eventually, I hope to unify these repos, but for now, I just build the react fork repo and copy the resulting lib/ directory over to this one before publishing to npm. 
+
+However: if you'd like to send PRs to either repo, please feel free!
