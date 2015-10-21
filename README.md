@@ -133,7 +133,7 @@ Please feel free to file any issues at <https://github.com/aickin/react-dom-stre
 
 ## Wait, where's the code?
 
-Well, this is awkward. You may have noticed that none of the actual server-side rendering code is actually not in the `react-dom-stream` repo. Most of the interesting code is over at <https://github.com/aickin/react/tree/streaming-render-0.14>, which is a fork of React. Specifically, check out [this commit](https://github.com/aickin/react/commit/d650a52e806f110ebec971e048b1dbded53cacd6) to see most of the interesting changes from React 0.14. Eventually, I hope to unify these repos, but for now, I just build the react fork repo and copy the resulting build/packages/reactlib/ directory over to this project before publishing to npm. 
+Well, this is awkward. You may have noticed that none of the actual server-side rendering code is in the `react-dom-stream` repo. Most of the interesting code is over at <https://github.com/aickin/react/tree/streaming-render-0.14>, which is a fork of React. Specifically, check out [this commit](https://github.com/aickin/react/commit/d650a52e806f110ebec971e048b1dbded53cacd6) to see most of the interesting changes from React 0.14. Eventually, I hope to unify these repos, but for now, I just build the react fork repo and copy the resulting build/packages/react/lib directory over to this project before publishing to npm. 
 
 ## I'd like to contribute!
 
