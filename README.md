@@ -119,7 +119,7 @@ All other client-side methods on `react` and `react-dom` (like `createElement` o
 
 ## Who?
 
-`react-dom-stream` is written by Sasha Aickin, though most of the code is from Facebook's React.
+`react-dom-stream` is written by Sasha Aickin ([@xander76](https://twitter.com/xander76)), though let's be real, most of the code is forked from Facebook's React.
 
 ## Status
 
