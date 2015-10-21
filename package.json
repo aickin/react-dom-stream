@@ -4,7 +4,10 @@
   "description": "A streaming server-side rendering library for React.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "(cd ../react && grunt test)",
+    "build": "(cd ../react && grunt build)", 
+    "postbuild": "rm -rf lib && cp -R ../react/build/packages/react/lib lib",
+    "prepublish": "npm run build"
   },
   "author": "Sasha Aickin",
   "license": "Apache-2.0",
