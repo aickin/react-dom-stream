@@ -1,11 +1,11 @@
 {
   "name": "react-dom-stream",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A streaming server-side rendering library for React.",
   "main": "index.js",
   "scripts": {
     "test": "(cd ../react && grunt test)",
-    "build": "(cd ../react && grunt build)", 
+    "build": "(cd ../react && grunt build)",
     "postbuild": "rm -rf lib && cp -R ../react/build/packages/react/lib lib",
     "prepublish": "npm run build"
   },
