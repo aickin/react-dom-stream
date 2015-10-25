@@ -142,6 +142,6 @@ You may have noticed that all of the server-side rendering code is in a director
 
 Awesome. You are the coolest.
 
-To get a working build running and learn a little about how the project is set up, please read CONTRIBUTING.md. 
+To get a working build running and learn a little about how the project is set up, please read [CONTRIBUTING.md](./CONTRIBUTING.md). 
 
 If you'd like to send PRs to either repo, please feel free! I'll require a CLA before pulling code to keep rights clean, but we can figure that out when we get there.
