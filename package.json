@@ -6,7 +6,7 @@
   "scripts": {
     "test": "(cd ../react && grunt test)",
     "build": "(cd ../react && grunt build)",
-    "postbuild": "rm -rf lib && cp -R ../react/build/packages/react/lib lib",
+    "postbuild": "rm -rf lib && cp -R ../react/build/packages/react/lib lib && rm -rf dist && cp -R ../react/build/packages/react/dist dist",
     "prepublish": "npm run build"
   },
   "author": "Sasha Aickin",

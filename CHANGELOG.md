@@ -6,19 +6,21 @@ This version's main achievement is changing the API to be more stream-friendly. 
 
 The first difference between v0.1.x's API and v0.2.x's API is how they handle the stream. v0.1.x accepted a Writable stream as an argument to `renderToString` and `renderToStaticMarkup`, but v0.2.x instead returns a Readable stream.
 
-The second difference is that the hash Promise returned from `renderToString` is now a property called `hash` on the stream that is the return value.
+The second difference is that there is no longer a hash that is returned from `renderToString` and has to be read into the page.
 
-The third difference is that there is no longer an `options` argument for either server-side render method, and the methods no longer buffer their output. Buffering is still vital to getting good performance, but you can (and should!) use projects like `compression` or `buffered-stream`. For more information, see the buffering section of the readme.
+The third difference is that you no longer need to use `react-dom-stream` to perform the client-side render. Using vanilla `ReactDOM.render` will work just fine.
 
-If your `renderToString` code looks like this in v0.1.x:
+So, if your `renderToString` code looks like this in v0.1.x:
 
 ```javascript
 var ReactDOMStream = require("react-dom-stream/server");
 
 app.get('/', function (req, res) {
+	// SNIP: write out HTML before the React-rendered piece
 	ReactDOMStream.renderToString(<Foo prop={value}/>, res)
 		.then(function(hash) {
-			// TODO: write the hash out to the page in a script tag
+			// SNIP: write the hash out to the page in a script tag
+			// SNIP: write out more HTML after the React-rendered piece.
 			res.end();
 		});
 });
@@ -30,16 +32,17 @@ Then it should look like this in v0.2.x:
 var ReactDOMStream = require("react-dom-stream/server");
 
 app.get('/', function (req, res) {
+	// SNIP: write out HTML before the React-rendered piece
 	var stream = ReactDOMStream.renderToString(<Foo prop={value}/>);
 	stream.pipe(res, {end: false});
-	stream.hash.then(function(hash) {
-		// TODO: write the hash out to the page in a script tag
+	stream.on("end", function() {
+		// SNIP: write out more HTML after the React-rendered piece.
 		res.end();
 	});
 });
 ```
 
-Since `renderToStaticMarkup returns a stream without a hash parameter, its code is much simpler. The following v0.1.x code:
+Or, if you are using `renderToStaticMarkup`, and it looked like this in v0.1.x:
 
 ```javascript
 var ReactDOMStream = require("react-dom-stream/server");
@@ -52,7 +55,7 @@ app.get('/', function (req, res) {
 });
 ```
 
-looks like this in v0.2.x:
+It should look like this in v0.2.x:
 
 ```javascript
 var ReactDOMStream = require("react-dom-stream/server");
@@ -61,5 +64,3 @@ app.get('/', function (req, res) {
 	ReactDOMStream.renderToStaticMarkup(<Foo prop={value}/>).pipe(res);
 });
 ```
-
-

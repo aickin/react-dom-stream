@@ -10,7 +10,7 @@ You need to have node, git, & npm installed. I've only tested this with node 4.2
 git clone https://github.com/aickin/react.git
 git clone https://github.com/aickin/react-dom-stream.git
 cd react
-git checkout streaming-render-0.14
+git checkout streaming-render-0.2
 npm install
 cd ../react-dom-stream
 npm install
@@ -32,7 +32,7 @@ npm run build # from the react-dom-stream directory
 
 The first thing you'll notice when you start poking around is that the project depends on `lib/ReactDOMServer`, but there's no lib directory checked in to the `react-dom-stream` repo. What gives?
 
-The code for server side rendering is actually in a branch in my fork of react, over at <https://github.com/aickin/react/tree/streaming-render-0.14>. The install instructions will download that repo at `./react`. 
+The code for server side rendering is actually in a branch in my fork of react, over at <https://github.com/aickin/react/tree/streaming-render-0.14>. The install instructions will download that repo at `./react`.
 
 If you want to modify the server side rendering code, you will need to modify the code under `./react/src` and then call `npm run build`  **from the react-dom-stream directory**. That will run the react build and copy the results over to `./react-dom-stream/lib`. **Do not edit the files under lib; they will not be committed to git**.
 
