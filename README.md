@@ -11,11 +11,11 @@ One difficulty with `ReactDOM.renderToString` is that it is synchronous, and it 
 3. One call to `ReactDOM.renderToString` can dominate the CPU and starve out other requests. This is particularly troublesome on servers that serve a mix of small and large pages.
 
 
-This project attempts to fix the first these three problems by rendering asynchronously to a stream.
+This project attempts to fix these three problems by rendering asynchronously to a stream.
 
 When web servers stream out their content, browsers can render pages for users before the entire response is finished. To learn more about streaming HTML to browsers, see [HTTP Archive: adding flush](http://www.stevesouders.com/blog/2013/01/31/http-archive-adding-flush/) and [Flushing the Document Early](http://www.stevesouders.com/blog/2009/05/18/flushing-the-document-early/).
 
-My preliminary tests have found that this renderer keeps the TTFB nearly constant as the size of a page gets larger. TTLB can be  longer than React's methods (by about 15-20%) when testing with zero network latency, but TTLB can be lower than React when real network speeds are used. To see more on performance, check out the [react-dom-stream-example](https://github.com/aickin/react-dom-stream-example) repo.
+My preliminary tests have found that this renderer keeps the TTFB nearly constant as the size of a page gets larger. TTLB can be  longer than React's methods (by about 15-20%) when testing with zero network latency, but TTLB is often lower than React when real network speed and latency is used. For example, in a real world test against Heroku with a 628KB page, TTFB was 55% faster and TTLB was 8% faster. To see more on performance, check out the [react-dom-stream-example](https://github.com/aickin/react-dom-stream-example) repo.
 
 ## How?
 
@@ -83,13 +83,13 @@ In previous versions of `react-dom-stream`, you needed to use a special render l
 
 ## When should you use `react-dom-stream`?
 
-Currently, `react-dom-stream` offers a tradeoff: for larger pages, it significantly reduces time to first byte while somewhat decreasing time to last byte.
+Currently, `react-dom-stream` offers a tradeoff: for larger pages, it significantly reduces time to first byte while somewhat increasing time to last byte.
 
-For smaller pages, `react-dom-stream` can be a net negative. String construction in Node is extremely fast, and streams and asynchronicity add an overhead. In my testing, pages smaller than about 50KB have worse TTFB and TTLB using `react-dom-stream`. These pages are not generally a performance bottleneck to begin with, though, and on my mid-2014 2.8GHz MBP, the difference in render time between `react-dom` and `react-dom-stream` is usually less than a millisecond.
+For smaller pages, `react-dom-stream` can actually be a net negative, albeit a small one. String construction in Node is extremely fast, and streams and asynchronicity add an overhead. In my testing, pages smaller than about 50KB have worse TTFB and TTLB using `react-dom-stream`. These pages are not generally a performance bottleneck to begin with, though, and on my mid-2014 2.8GHz MBP, the difference in render time between `react-dom` and `react-dom-stream` is usually less than a millisecond.
 
-For larger pages, the TTFB stays relatively constant as the page gets larger (TTFB hovers around 4ms on my laptop), while the TTLB tends to hover around 15-20% longer than `react-dom`. Using this project gets you faster user perceived performance at the cost of worse TTLB performance.
+For larger pages, the TTFB stays relatively constant as the page gets larger (TTFB hovers around 4ms on my laptop), while the TTLB tends to hover around 15-20% longer than `react-dom`. Using this project gets you faster user perceived performance at the cost of worse TTLB performance. However, even here, there is a wrinkle, because most of my testing has been done against localhost. When real world network speeds and latencies are used, `react-dom-stream` often beats React in both TTFB and TTLB. This is probably because `react-dom-stream` faster time to first byte gets a headstart on filling up the network pipe.
 
-One other operational challenge that `react-dom-stream` can help is introducing asynchronicity, which can allow requests for small pages to not get completely blocked by executing requests for large pages.
+One other operational challenge that `react-dom-stream` can help with is introducing asynchronicity, which can allow requests for small pages to not get completely blocked by executing requests for large pages.
 
 I will try in later releases to reduce the extra overhead in `react-dom-stream` in order to make it less of a tradeoff, although it remains to be seen if that can be achieved.
 
