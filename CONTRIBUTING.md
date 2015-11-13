@@ -28,17 +28,17 @@ If you want to run the build after changing code:
 npm run build # from the react-dom-stream directory
 ```
 
-## Where's the `lib` directory?
+## Where's the `lib` and `dist` directory?
 
 The first thing you'll notice when you start poking around is that the project depends on `lib/ReactDOMServer`, but there's no lib directory checked in to the `react-dom-stream` repo. What gives?
 
-The code for server side rendering is actually in a branch in my fork of react, over at <https://github.com/aickin/react/tree/streaming-render-0.14>. The install instructions will download that repo at `./react`.
+The code for server side rendering is actually in a branch in my fork of react, over at <https://github.com/aickin/react/tree/streaming-render-0.2>. The install instructions will download that repo at `./react`.
 
-If you want to modify the server side rendering code, you will need to modify the code under `./react/src` and then call `npm run build`  **from the react-dom-stream directory**. That will run the react build and copy the results over to `./react-dom-stream/lib`. **Do not edit the files under lib; they will not be committed to git**.
+If you want to modify the server side rendering code, you will need to modify the code under `./react/src` and then call `npm run build`  **from the react-dom-stream directory**. That will run the react build and copy the results over to `./react-dom-stream/lib` and `./react-dom-stream/dist`. **Do not edit the files under lib or dist; they will not be committed to git**.
 
 ## What code should I look at?
 
-To get a sense for what code has been forked from React 0.14, check out [this commit](https://github.com/aickin/react/commit/d650a52e806f110ebec971e048b1dbded53cacd6); it contains most of the interesting changes from upstream.
+To get a sense for what code has been forked from React 0.14, check out [this commit](https://github.com/aickin/react/commit/9159656c53c0335ec6bd56fc7537231a9abeb5d5); it contains most of the interesting changes from upstream.
 
 ## Testing
 
