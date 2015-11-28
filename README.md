@@ -63,6 +63,8 @@ app.get('/', (req, res) => {
 });
 ```
 
+If the piping syntax is not to your liking, check out the section below on combining `renderToString` and `renderToStaticMarkup` to render a full page.
+
 #### `Readable renderToStaticMarkup(ReactElement element)`
 
 This method renders `element` to a readable stream that is returned from the method. Like `ReactDOM.renderToStaticMarkup`, it is only good for static pages where you don't intend to use React to render on the client side, and in exchange it generates smaller sized markup than `renderToString`.
@@ -77,9 +79,45 @@ app.get('/', (req, res) => {
 });
 ```
 
-### Rendering on the client
+As of v0.3.x, `renderToStaticMarkup` can also accept streams as children in the React element tree; see the next section for how this can be used to render a full page.
 
-In previous versions of `react-dom-stream`, you needed to use a special render library to reconnect to server-generated markup. As of version 0.2.0, this is no longer the case. You can now use the normal `ReactDOM.render` method, as you would when using `ReactDOM` to generate server-side markup.
+### Combining `renderToStaticMarkup` and `renderToString` to serve a page
+
+If you have used React for server and client rendering before, you probably know that React does not work on the client side if you try to render the entire HTML markup or [even if you try to render just the HTML body](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375#.7tqgmc4pj). As a result, with vanilla `react-dom/server` many developers use `renderToStaticMarkup` to generate the `<html>`, `<head>`, and `<body>` tags, and then embed the output of `renderToString` into a div inside the body.
+
+I wanted this pattern to be possible in `react-dom-stream`, so `renderToStaticMarkup` accepts Readable streams as children in the React element tree the same way that it accepts Strings as children in the tree. This is useful for using `renderToStaticMarkup` for the page template and `renderToString` for the dynamic HTML that you want to render with React on the client. That would look something like this:
+
+```javascript
+import ReactDOMStream from "react-dom-stream/server";
+
+app.get("/", (req, res) => {
+	// use renderToStaticMarkup to generate the entire HTML markup, embedding the 
+	// dynamic part under the renderDiv div.
+	ReactDOMStream.renderToStaticMarkup(
+		<html>
+			<head>
+				<script src="myscript.js"></script>
+				<title>My Cool Page</title>
+			</head>
+			<body>
+				<div id="renderDiv">
+					{ReactDOMStream.renderToString(<Foo prop={value}/>)}
+				</div>
+				<script>
+					{`  // custom javascript for reconnecting on the client side.
+						ReactDOM.render(<Foo prop={${value}}/>, document.getElementById("renderDiv"));`}
+				</script>
+			</body>
+		</html>
+	).pipe(res);
+});
+```
+
+Note that `renderToString` does **not** accept streams as children in the React element tree, as there would be no way to reconnect to that markup on the client side. If you want to embed a stream on the server side, you want to use `renderToStaticMarkup`.
+
+### Reconnecting the markup on the client
+
+In previous versions of `react-dom-stream`, you needed to use a special render library to reconnect to server-generated markup. As of version 0.2.0 and later, this is no longer the case. You can now use the normal `ReactDOM.render` method, as you would when using `ReactDOM` to generate server-side markup.
 
 ## When should you use `react-dom-stream`?
 
@@ -95,11 +133,11 @@ I will try in later releases to reduce the extra overhead in `react-dom-stream` 
 
 ## Who?
 
-`react-dom-stream` is written by Sasha Aickin ([@xander76](https://twitter.com/xander76)), though let's be real, most of the code is forked from Facebook's React.
+`react-dom-stream` is written by Sasha Aickin ([@xander76](https://twitter.com/xander76)), though let's be real, about 99% of the code is forked from Facebook's React.
 
 ## Status
 
-This project is of alpha quality; it has not been used in production yet, and the API is firming up. It does, however, pass all of the automated tests that are currently run on `react-dom` in the main React project plus a dozen or so more that I've written.
+This project is of alpha quality; it has not been used in production yet, and the API is firming up. It does, however, pass all of the automated tests that are currently run on `react-dom` in the main React project plus one or two dozen more that I've written.
 
 This module is forked from Facebook's React project. All extra code and modifications are offered under the Apache 2.0 license.
 
@@ -109,7 +147,7 @@ Please feel free to file any issues at <https://github.com/aickin/react-dom-stre
 
 ## Upgrading from v1.x
 
-There was a major change to the API from version 0.1.x to version 0.2.x, as a result of the discussion in issue #2. The version 0.1.x API still work in v0.2.x, but it will be removed in v0.3.x. To learn more about how to upgrade your client code, please read [CHANGELOG.md](/CHANGELOG.md).
+There was a major change to the API from version 0.1.x to version 0.2.x, as a result of the discussion in issue #2. The version 0.1.x API still works in v0.2.x, but it was removed in v0.3.x. To learn more about how to upgrade your client code, please read [CHANGELOG.md](/CHANGELOG.md).
 
 ## Wait, where's the code?
 

@@ -16,9 +16,6 @@
     "url": "https://github.com/aickin/react-dom-stream.git"
   },
   "homepage": "https://github.com/aickin/react-dom-stream",
-  "peerDependencies": {
-    "react-dom": "^0.14.0"
-  },
   "engines": {
     "node": ">=4.0.0"
   },

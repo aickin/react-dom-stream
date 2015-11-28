@@ -1,3 +1,9 @@
+## v0.3.0
+
+This version added the ability to embed streams as children in the React element tree when using `renderToStaticMarkup`. 
+
+In v0.3.0, I also removed the v0.1.x API. If you need to convert your code, please see below how to do so.
+
 ## v0.2.0
 
 This version's main achievement is changing the API to be more stream-friendly. The 0.1.x API is still supported, but it is deprecated and will cause a console error. In version 0.3.0, I will remove support for the 0.1.x API.
