@@ -164,7 +164,7 @@ I will try in later releases to reduce the extra overhead in `react-dom-stream` 
 
 ## Status
 
-This project is of alpha quality; it has not been used in production yet, and the API is firming up. It does, however, pass all of the automated tests that are currently run on `react-dom` in the main React project plus one or two dozen more that I've written.
+This project is of beta quality; I don't know if it has been used in production yet, and the API is firming up. It does, however, pass all of the automated tests that are currently run on `react-dom` in the main React project plus one or two dozen more that I've written.
 
 This module is forked from Facebook's React project. All extra code and modifications are offered under the Apache 2.0 license.
 
