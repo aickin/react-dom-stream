@@ -1,3 +1,7 @@
+## v0.4.1
+
+This was just an update to the README file.
+
 ## v0.4.0
 
 This version changes the behavior of embedded streams when using `renderToStaticMarkup`. In v0.3.0, streams were sent directly to the output without escaping for the browser. However, I've come to believe this was the wrong decision, as it means that the default behavior is susceptible to cross-site scripting attacks. For this very reason, React automatically escapes Strings and provides `dangerouslySetInnerHTML` as a way for developers to get around the escaping.
