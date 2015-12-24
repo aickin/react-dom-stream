@@ -1,3 +1,38 @@
+## v0.4.0
+
+This version changes the behavior of embedded streams when using `renderToStaticMarkup`. In v0.3.0, streams were sent directly to the output without escaping for the browser. However, I've come to believe this was the wrong decision, as it means that the default behavior is susceptible to cross-site scripting attacks. For this very reason, React automatically escapes Strings and provides `dangerouslySetInnerHTML` as a way for developers to get around the escaping.
+
+In v0.4.0, any stream that is a child of an element will be browser-encoded, whereas added as the `dangerouslySetInnerHTML.__html` property will be added directly. So if you have the following code in v0.3.0:
+
+```javascript
+const stream = ReactDOMStream.renderToStaticMarkup(
+	<div>
+		{ReactDOMStream.renderToString(<span>Hello, World!</span>)}
+	</div>
+);
+```
+
+it will need to change to this in v0.4.0:
+
+```javascript
+const stream = ReactDOMStream.renderToStaticMarkup(
+	<div dangerouslySetInnerHTML={{__html: ReactDOMStream.renderToString(<span>Hello, World!</span>)}} />
+);
+```
+
+If you prefer the v0.3.0 child syntax to `dangerouslySetInnerHTML`, I made a library called `react-raw-html` which passes through children without encoding. So the v0.3.0 example above could also be rewritten in v0.4.0 as:
+
+```javascript
+import Raw from `react-raw-html`
+
+const stream = ReactDOMStream.renderToStaticMarkup(
+	<Raw.div>
+		{ReactDOMStream.renderToString(<span>Hello, World!</span>)}
+	</Raw.div>
+);
+```
+
+
 ## v0.3.0
 
 This version added the ability to embed streams as children in the React element tree when using `renderToStaticMarkup`. 

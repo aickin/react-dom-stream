@@ -85,7 +85,7 @@ As of v0.3.x, `renderToStaticMarkup` can also accept streams as children in the 
 
 If you have used React for server and client rendering before, you probably know that React does not work on the client side if you try to render the entire HTML markup or [even if you try to render just the HTML body](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375#.7tqgmc4pj). As a result, with vanilla `react-dom/server` many developers use `renderToStaticMarkup` to generate the `<html>`, `<head>`, and `<body>` tags, and then embed the output of `renderToString` into a div inside the body.
 
-I wanted this pattern to be possible in `react-dom-stream`, so `renderToStaticMarkup` accepts Readable streams as children in the React element tree the same way that it accepts Strings as children in the tree. This is useful for using `renderToStaticMarkup` for the page template and `renderToString` for the dynamic HTML that you want to render with React on the client. That would look something like this:
+I wanted this pattern to be possible in `react-dom-stream`, so `renderToStaticMarkup` accepts Readable streams as children in the React element tree the same way that it accepts Strings as children in the tree. This is useful for using `renderToStaticMarkup` for the page template and `renderToString` for the dynamic HTML that you want to render with React on the client. Note that, as with Strings, `react-dom-stream` automatically encodes streams to protect against cross-site scripting attacks, so you need to use `dangerouslySetInnerHTML` to embed markup. That would look something like this:
 
 ```javascript
 import ReactDOMStream from "react-dom-stream/server";
@@ -100,9 +100,36 @@ app.get("/", (req, res) => {
 				<title>My Cool Page</title>
 			</head>
 			<body>
-				<div id="renderDiv">
+				<div id="renderDiv" dangerouslySetInnerHTML={{__html: ReactDOMStream.renderToString(<Foo prop={value}/>)}}></div>
+				<script>
+					{`  // custom javascript for reconnecting on the client side.
+						ReactDOM.render(<Foo prop={${value}}/>, document.getElementById("renderDiv"));`}
+				</script>
+			</body>
+		</html>
+	).pipe(res);
+});
+```
+
+If you don't like using `dangerouslySetInnerHTML`, consider using my companion project `react-raw-html`, which doesn't encode children that are Strings or Streams. The previous example would then look like this:
+
+```javascript
+import ReactDOMStream from "react-dom-stream/server";
+import Raw from "react-raw-html";
+
+app.get("/", (req, res) => {
+	// use renderToStaticMarkup to generate the entire HTML markup, embedding the 
+	// dynamic part under the renderDiv div.
+	ReactDOMStream.renderToStaticMarkup(
+		<html>
+			<head>
+				<script src="myscript.js"></script>
+				<title>My Cool Page</title>
+			</head>
+			<body>
+				<Raw.div id="renderDiv">
 					{ReactDOMStream.renderToString(<Foo prop={value}/>)}
-				</div>
+				</Raw.div>
 				<script>
 					{`  // custom javascript for reconnecting on the client side.
 						ReactDOM.render(<Foo prop={${value}}/>, document.getElementById("renderDiv"));`}
@@ -148,6 +175,10 @@ Please feel free to file any issues at <https://github.com/aickin/react-dom-stre
 ## Upgrading from v1.x
 
 There was a major change to the API from version 0.1.x to version 0.2.x, as a result of the discussion in issue #2. The version 0.1.x API still works in v0.2.x, but it was removed in v0.3.x. To learn more about how to upgrade your client code, please read [CHANGELOG.md](/CHANGELOG.md).
+
+## Upgrading from v3.x
+
+There was a breaking change from 3.x to 4.x, which is that the 4.x `renderToStaticMarkup` now automatically escapes the characters of a child stream, whereas 3.x did not. To learn about how to upgrade your client code, please read [CHANGELOG.md](/CHANGELOG.md).
 
 ## Wait, where's the code?
 
