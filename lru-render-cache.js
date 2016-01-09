@@ -1,0 +1,1 @@
+module.exports = require("./build/lru-render-cache");
