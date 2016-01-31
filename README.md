@@ -1,6 +1,6 @@
 # react-dom-stream
 
-This is a React renderer for generating markup on a NodeJS server, but unlike the built-in `ReactDOM.renderToString`, this module renders to a stream. Streams make this library as much faster in sending down the first byte of a page than `ReactDOM.renderToString`, and user perceived performance gains can be significant.
+This is a React renderer for generating markup on a NodeJS server, but unlike the built-in `ReactDOM.renderToString`, this module renders to a stream. Streams make this library much faster at sending down the page's first byte than `ReactDOM.renderToString`, and user perceived performance gains can be significant.
 
 ## Why?
 
@@ -15,7 +15,7 @@ This project attempts to fix these three problems by rendering asynchronously to
 
 When web servers stream out their content, browsers can render pages for users before the entire response is finished. To learn more about streaming HTML to browsers, see [HTTP Archive: adding flush](http://www.stevesouders.com/blog/2013/01/31/http-archive-adding-flush/) and [Flushing the Document Early](http://www.stevesouders.com/blog/2009/05/18/flushing-the-document-early/).
 
-My preliminary tests have found that this renderer keeps the TTFB nearly constant as the size of a page gets larger. TTLB can be  longer than React's methods (by about 15-20%) when testing with zero network latency, but TTLB is often lower than React when real network speed and latency is used. For example, in a real world test against Heroku with a 628KB page, TTFB was 55% faster and TTLB was 8% faster. To see more on performance, check out the [react-dom-stream-example](https://github.com/aickin/react-dom-stream-example) repo.
+My preliminary tests have found that this renderer keeps the TTFB nearly constant as the size of a page gets larger. TTLB can be longer than React's methods (by about 15-20%) when testing with zero network latency, but TTLB is often lower than React when real network speed and latency is used. For example, in a real world test against Heroku with a 628KB page, TTFB was 55% faster and TTLB was 8% faster. To see more on performance, check out the [react-dom-stream-example](https://github.com/aickin/react-dom-stream-example) repo.
 
 ## How?
 
