@@ -91,7 +91,7 @@ I wanted this pattern to be possible in `react-dom-stream`, so `renderToStaticMa
 import ReactDOMStream from "react-dom-stream/server";
 
 app.get("/", (req, res) => {
-	// use renderToStaticMarkup to generate the entire HTML markup, embedding the 
+	// use renderToStaticMarkup to generate the entire HTML markup, embedding the
 	// dynamic part under the renderDiv div.
 	ReactDOMStream.renderToStaticMarkup(
 		<html>
@@ -118,7 +118,7 @@ import ReactDOMStream from "react-dom-stream/server";
 import Raw from "react-raw-html";
 
 app.get("/", (req, res) => {
-	// use renderToStaticMarkup to generate the entire HTML markup, embedding the 
+	// use renderToStaticMarkup to generate the entire HTML markup, embedding the
 	// dynamic part under the renderDiv div.
 	ReactDOMStream.renderToStaticMarkup(
 		<html>
@@ -194,3 +194,6 @@ Awesome. You are the coolest.
 To get a working build running and learn a little about how the project is set up, please read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 If you'd like to send PRs to either repo, please feel free! I'll require a CLA before pulling code to keep rights clean, but we can figure that out when we get there.
+
+Please note that this project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
+[code-of-conduct]: http://todogroup.org/opencodeofconduct/#react-dom-stream/xander76@yahoo.com
