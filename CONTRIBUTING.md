@@ -51,3 +51,8 @@ To run the tests, call `npm test` **from the react-dom-stream directory**.
 I am happy to accept pull requests to either project! Please make sure that the tests pass before submitting.
 
 I do plan to require a CLA for contributors to keep the IP rights clean, but it shouldn't be too onerous, I hope. I'll update with details as I figure them out.
+
+## Code of Conduct
+
+This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
+[code-of-conduct]: http://todogroup.org/opencodeofconduct/#react-dom-stream/xander76@yahoo.com
