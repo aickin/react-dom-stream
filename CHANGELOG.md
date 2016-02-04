@@ -1,3 +1,17 @@
+## v0.5.0
+
+### Improved performance
+
+I found a few perf tweaks that make my TTLB benchmarks run as fast in `react-dom-stream` as they do in `react-dom`.
+
+### Added Code Of Conduct
+
+I realized I'd forgotten to explicitly add a code of conduct. Shame on me!
+
+### Component Caching
+
+I added an experimental feature, component caching, which allows the user to cache component renderings to be shared amongst different calls to `renderToString` and `renderToStaticMarkup`. This has the potential to massively speed up rendering when a server tends to continually generate the same markup snippets, but it can be very dangerous and leak private information if used incorrectly. Please do read the documentation for it in the README and try it out in development, but please DO NOT use in production until it has had more testing.
+
 ## v0.4.1
 
 This was just an update to the README file.
@@ -39,7 +53,7 @@ const stream = ReactDOMStream.renderToStaticMarkup(
 
 ## v0.3.0
 
-This version added the ability to embed streams as children in the React element tree when using `renderToStaticMarkup`. 
+This version added the ability to embed streams as children in the React element tree when using `renderToStaticMarkup`.
 
 In v0.3.0, I also removed the v0.1.x API. If you need to convert your code, please see below how to do so.
 
