@@ -202,6 +202,53 @@ export default class BADCacheableComponent extends React.Component {
 
 In this example, the rendering depends on both `this.props.name` and `Date.now()`, but `componentCacheKey` only returns `this.props.name`. This means that subsequent renderings of the component with the same name will get a cache hit, and the time will therefore be out of date.
 
+Another way that you can use caching is by using the cache higher order component.
+
+```javascript
+import React from "react";
+import cache from "react-dom-stream/cache-component";
+
+const CacheableComponent = ({props}) => (
+	<span>Hello, ${props.name}!</span>
+);
+
+const componentCacheKey = props => props.name;
+
+const CachedComponent = cache(componentCacheKey)(CacheableComponent);
+
+export default CachedComponent;
+```
+
+This is the same example as above, but using the cache higher order component and a pure functional implementation. Just like in the other example, you still need to manually opt you components in and specify a `componentCacheKey`. However, if you do not specify a `componentCacheKey`, `JSON(stringify(props))` will be used by default. This is a good option to use if your component is defined by a combination of all its props. An example of using the default `componentCacheKey` can be seen below.
+
+```javascript
+import React from "react";
+import cache from "react-dom-stream/cache-component";
+
+const CacheableComponent = ({props}) => (
+	<span>Hello, ${props.name}!</span>
+);
+
+const CachedComponent = cache()(CacheableComponent);
+
+export default CachedComponent;
+```
+
+If you are using futuristic decorators, we can use them as seen below using the default cache key. Note that classes have to be used for decorators.
+
+
+```javascript
+import React from "react";
+import cache from "react-dom-stream/cache-component";
+
+@cache
+export default class BADCacheableComponent extends React.Component {
+	render() {
+		return <span>Hello, ${this.props.name}! It is ${new Date()}</span>;
+	}
+}
+```
+
 Note that this caching feature is powerful, but as of right now it is **extremely experimental**. I would be very pleased if folks try it out in development and give me feedback, but I strongly believe it **should not be used in production** until it has been tested more thoroughly. Server-side caching on a component basis has real potential, but mistakes in server-side caching can be extremely costly, as they are often liable to leak private information between users. You have been warned.
 
 Also, note that the APIs of this feature are liable to change.
